@@ -22,4 +22,10 @@ export const CreatePostSchema = createInsertSchema(Post, {
   updatedAt: true,
 });
 
+export interface EntityMap {
+  Post: typeof Post.$inferSelect;
+}
+export type Entity = keyof EntityMap;
+export type Model<TEntity extends Entity> = EntityMap[TEntity];
+
 export * from "./auth-schema";
