@@ -1,0 +1,8 @@
+---
+alwaysApply: true
+---
+
+Follow these design rules:
+
+- Always use the @acme/ui package for all UI components.
+- Prefer using flex over grid. For flex-row or flex-col, we use custom components like Split and Stack, where Split is flex items-center and Stack is flex flex-col. Don't use <div className="flex">, etc. Instead, use Split and Stack.
