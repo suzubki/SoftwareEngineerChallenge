@@ -19,35 +19,35 @@ export function SetupCard(props: {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
-  const deletePost = useMutation(
-    trpc.post.delete.mutationOptions({
+  const deleteSetup = useMutation(
+    trpc.setup.delete.mutationOptions({
       onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.post.pathFilter());
+        await queryClient.invalidateQueries(trpc.setup.pathFilter());
       },
       onError: (err) => {
         toast.error(
           err.data?.code === "UNAUTHORIZED"
-            ? "You must be logged in to delete a post"
-            : "Failed to delete post",
+            ? "You must be logged in to delete a setup"
+            : "Failed to delete setup",
         );
       },
     }),
   );
 
-  // const likePost = useMutation(
-  //   trpc.post.like.mutationOptions({
-  //     onSuccess: async () => {
-  //       await queryClient.invalidateQueries(trpc.post.pathFilter());
-  //     },
-  //     onError: (err) => {
-  //       toast.error(
-  //         err.data?.code === "UNAUTHORIZED"
-  //           ? "You must be logged in to like a post"
-  //           : "Failed to like post",
-  //       );
-  //     },
-  //   }),
-  // );
+  const likeSetup = useMutation(
+    trpc.setup.like.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(trpc.setup.pathFilter());
+      },
+      onError: (err) => {
+        toast.error(
+          err.data?.code === "UNAUTHORIZED"
+            ? "You must be logged in to like a setup"
+            : "Failed to like setup",
+        );
+      },
+    }),
+  );
 
   return (
     <Card className="group relative overflow-hidden shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
@@ -100,7 +100,7 @@ export function SetupCard(props: {
             size="sm"
             variant="secondary"
             className="flex items-center gap-2"
-            // onClick={() => likePost.mutate(props.setup.id)}
+            onClick={() => likeSetup.mutate({ id: props.setup.id })}
           >
             <HeartIcon className="h-4 w-4" />
             <span className="text-sm font-medium">{props.setup.likes}</span>
@@ -110,7 +110,7 @@ export function SetupCard(props: {
             size="sm"
             variant="ghost"
             className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-            onClick={() => deletePost.mutate(props.setup.id)}
+            onClick={() => deleteSetup.mutate({ id: props.setup.id })}
           >
             <Trash2Icon className="mr-2 h-4 w-4" />
             Eliminar
