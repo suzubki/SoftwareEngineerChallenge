@@ -3,10 +3,11 @@ import { Suspense } from "react";
 import { HydrateClient, prefetch, trpc } from "~/trpc/server";
 import { AuthShowcase } from "./_components/auth-showcase";
 import { CreatePostForm } from "./_components/form";
-import { PostCardSkeleton, PostList } from "./_components/posts";
+import { SetupList } from "./_components/setup";
+import { SetupCardSkeleton } from "./_components/setup-card-skeleton";
 
 export default function HomePage() {
-  prefetch(trpc.post.all.queryOptions());
+  prefetch(trpc.setup.all.queryOptions());
 
   return (
     <HydrateClient>
@@ -22,13 +23,13 @@ export default function HomePage() {
             <Suspense
               fallback={
                 <div className="flex w-full flex-col gap-4">
-                  <PostCardSkeleton />
-                  <PostCardSkeleton />
-                  <PostCardSkeleton />
+                  <SetupCardSkeleton />
+                  <SetupCardSkeleton />
+                  <SetupCardSkeleton />
                 </div>
               }
             >
-              <PostList />
+              <SetupList />
             </Suspense>
           </div>
         </div>
