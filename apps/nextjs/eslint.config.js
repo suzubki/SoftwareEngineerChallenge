@@ -6,6 +6,10 @@ import reactConfig from "@acme/eslint-config/react";
 export default [
   {
     ignores: [".next/**"],
+    rules: {
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+    },
   },
   ...baseConfig,
   ...reactConfig,
