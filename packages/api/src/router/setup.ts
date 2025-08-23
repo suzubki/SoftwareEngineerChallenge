@@ -6,7 +6,7 @@ import { Setup } from "@acme/db/schema";
 import { setupCreateSchema } from "@acme/validators";
 
 import { mockSetups } from "../data/setups";
-import { protectedProcedure, publicProcedure } from "../trpc";
+import { publicProcedure } from "../trpc";
 
 const LIMIT = 5;
 
@@ -35,10 +35,20 @@ export const setupRouter = {
       // return setup;
     }),
 
-  create: protectedProcedure
+  create: publicProcedure
     .input(setupCreateSchema)
     .mutation(({ input, ctx }) => {
-      return ctx.db.insert(Setup).values(input).returning();
+      return ctx.db
+        .insert(Setup)
+        .values({
+          title: input.title,
+          description: input.description,
+          imageUrl: input.imageUrl,
+          author: input.author,
+          likes: input.likes ?? 0,
+          tags: input.tags,
+        })
+        .returning();
     }),
 
   /**
@@ -51,7 +61,7 @@ export const setupRouter = {
       if (!setup) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
-      setup.likes++;
+      setup.likes = (setup.likes ?? 0) + 1;
 
       return setup;
     }),
