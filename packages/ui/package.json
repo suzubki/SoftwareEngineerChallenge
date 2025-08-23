@@ -17,7 +17,10 @@
     "./avatar": "./src/avatar.tsx",
     "./skeleton": "./src/skeleton.tsx",
     "./stack": "./src/stack.tsx",
-    "./split": "./src/split.tsx"
+    "./split": "./src/split.tsx",
+    "./upload": "./src/upload.tsx",
+    "./progress": "./src/progress.tsx",
+    "./progress-bar": "./src/progress-bar.tsx"
   },
   "license": "MIT",
   "scripts": {
