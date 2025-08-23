@@ -2,6 +2,9 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
+import { Setup } from "@acme/db/schema";
+import { setupCreateSchema } from "@acme/validators";
+
 import { mockSetups } from "../data/setups";
 import { protectedProcedure, publicProcedure } from "../trpc";
 
@@ -20,25 +23,28 @@ export const setupRouter = {
       return mockSetups.find((setup) => setup.id === input.id) || null;
     }),
 
-  // Delete setup
-  delete: protectedProcedure
+  // Delete setup, DB required since our data is always STATIC
+  delete: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(({ input }) => {
-      const setup = mockSetups.find((setup) => setup.id === input.id);
+      // const setup = mockSetups.find((setup) => setup.id === input.id);
+      // if (!setup) {
+      //   throw new TRPCError({ code: "NOT_FOUND" });
+      // }
+      // mockSetups.splice(mockSetups.indexOf(setup), 1);
+      // return setup;
+    }),
 
-      if (!setup) {
-        throw new TRPCError({ code: "NOT_FOUND" });
-      }
-
-      mockSetups.splice(mockSetups.indexOf(setup), 1);
-
-      return setup;
+  create: protectedProcedure
+    .input(setupCreateSchema)
+    .mutation(({ input, ctx }) => {
+      return ctx.db.insert(Setup).values(input).returning();
     }),
 
   /**
    * Interactions
    */
-  like: protectedProcedure
+  like: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(({ input }) => {
       const setup = mockSetups.find((setup) => setup.id === input.id);
