@@ -1,54 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { HeartIcon, TagIcon, Trash2Icon, UserIcon } from "lucide-react";
 
-import type { RouterOutputs } from "@acme/api";
+import type { Model } from "@acme/db/schema";
 import { Badge } from "@acme/ui/badge";
 import { Button } from "@acme/ui/button";
 import { Card, CardContent, CardHeader } from "@acme/ui/card";
 import { Split } from "@acme/ui/split";
-import { toast } from "@acme/ui/toast";
-
-import { useTRPC } from "~/trpc/react";
 
 export function SetupCard(props: {
-  setup: RouterOutputs["setup"]["all"][number];
+  setup: Model<"Setup">;
+  deleteSetup: () => void;
+  likeSetup: () => void;
 }) {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
-
-  const deleteSetup = useMutation(
-    trpc.setup.delete.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.setup.pathFilter());
-      },
-      onError: (err) => {
-        toast.error(
-          err.data?.code === "UNAUTHORIZED"
-            ? "You must be logged in to delete a setup"
-            : "Failed to delete setup",
-        );
-      },
-    }),
-  );
-
-  const likeSetup = useMutation(
-    trpc.setup.like.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.setup.pathFilter());
-      },
-      onError: (err) => {
-        toast.error(
-          err.data?.code === "UNAUTHORIZED"
-            ? "You must be logged in to like a setup"
-            : "Failed to like setup",
-        );
-      },
-    }),
-  );
-
   return (
     <Card className="group relative overflow-hidden shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
       <div className="relative h-48 w-full overflow-hidden">
@@ -100,7 +65,7 @@ export function SetupCard(props: {
             size="sm"
             variant="secondary"
             className="flex items-center gap-2"
-            onClick={() => likeSetup.mutate({ id: props.setup.id })}
+            onClick={() => props.likeSetup()}
           >
             <HeartIcon className="h-4 w-4" />
             <span className="text-sm font-medium">{props.setup.likes}</span>
@@ -110,7 +75,7 @@ export function SetupCard(props: {
             size="sm"
             variant="ghost"
             className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-            onClick={() => deleteSetup.mutate({ id: props.setup.id })}
+            onClick={() => props.deleteSetup()}
           >
             <Trash2Icon className="mr-2 h-4 w-4" />
             Eliminar

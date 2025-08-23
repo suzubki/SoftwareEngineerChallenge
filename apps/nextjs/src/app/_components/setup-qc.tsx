@@ -3,10 +3,10 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { useTRPC } from "~/trpc/react";
-import { SetupCard } from "./setup-card";
 import { SetupCardSkeleton } from "./setup-card-skeleton";
+import { SetupList } from "./setup-list";
 
-export function SetupList() {
+export const SetupQueryContainer = () => {
   const trpc = useTRPC();
   const { data: setups } = useSuspenseQuery(trpc.setup.all.queryOptions());
 
@@ -24,11 +24,5 @@ export function SetupList() {
     );
   }
 
-  return (
-    <div className="flex w-full flex-col gap-4">
-      {setups.map((setup) => {
-        return <SetupCard key={setup.id} setup={setup} />;
-      })}
-    </div>
-  );
-}
+  return <SetupList setups={setups} />;
+};
