@@ -43,7 +43,7 @@ export function SetupCard(props: {
         </p>
 
         <Split className="mb-4 flex-wrap gap-2">
-          {props.setup.tags.slice(0, 3).map((tag) => (
+          {props.setup.tags?.slice(0, 3).map((tag) => (
             <Badge
               key={tag}
               variant="outline"
@@ -53,7 +53,7 @@ export function SetupCard(props: {
               {tag}
             </Badge>
           ))}
-          {props.setup.tags.length > 3 && (
+          {props.setup.tags?.length && props.setup.tags.length > 3 && (
             <Badge variant="secondary" className="text-muted-foreground">
               +{props.setup.tags.length - 3} más
             </Badge>

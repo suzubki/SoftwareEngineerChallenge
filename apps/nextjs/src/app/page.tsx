@@ -1,10 +1,11 @@
 import { Suspense } from "react";
+import Link from "next/link";
+
+import { Button } from "@acme/ui/button";
 
 import { HydrateClient, prefetch, trpc } from "~/trpc/server";
-import { AuthShowcase } from "./_components/auth-showcase";
-import { CreatePostForm } from "./_components/form";
-import { SetupList } from "./_components/setup";
 import { SetupCardSkeleton } from "./_components/setup-card-skeleton";
+import { SetupQueryContainer } from "./_components/setup-qc";
 
 export default function HomePage() {
   prefetch(trpc.setup.all.queryOptions());
@@ -13,12 +14,15 @@ export default function HomePage() {
     <HydrateClient>
       <main className="container h-screen py-16">
         <div className="flex flex-col items-center justify-center gap-4">
-          <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
+          <h1 className="text-5xl font-extrabold tracking-tight">
             Create <span className="text-primary">T3</span> Turbo
           </h1>
-          <AuthShowcase />
+          {/* <AuthShowcase /> */}
 
-          <CreatePostForm />
+          <Button asChild>
+            <Link href="/create">Create a new setup</Link>
+          </Button>
+
           <div className="w-full max-w-2xl overflow-y-scroll">
             <Suspense
               fallback={
@@ -29,7 +33,7 @@ export default function HomePage() {
                 </div>
               }
             >
-              <SetupList />
+              <SetupQueryContainer />
             </Suspense>
           </div>
         </div>

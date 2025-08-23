@@ -57,11 +57,14 @@ export function SetupList(props: { setups: Model<"Setup">[] }) {
           trpc.setup.all.queryOptions().queryKey,
           (old: Model<"Setup">[] | undefined) => {
             if (!old) return [];
-            return old.map((setup) =>
+
+            const newArr = old.map((setup) =>
               setup.id === input.id
                 ? { ...setup, likes: setup.likes + 1 }
                 : setup,
             );
+            setSetups(newArr);
+            return newArr;
           },
         );
 
@@ -72,13 +75,6 @@ export function SetupList(props: { setups: Model<"Setup">[] }) {
 
   const likeSetup = async (setup: Model<"Setup">) => {
     likeSetupMutation.mutate({ id: setup.id });
-    const newSetups = optimisticSetups.map((s) => {
-      if (s.id === setup.id) {
-        return { ...s, likes: s.likes + 1 };
-      }
-      return s;
-    });
-    setSetups(newSetups);
   };
 
   // Using optimistic updates with useOptimistic hook
