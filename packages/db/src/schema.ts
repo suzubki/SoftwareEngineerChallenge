@@ -1,7 +1,5 @@
 import { sql } from "drizzle-orm";
 import { pgTable } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod/v4";
 
 export const Post = pgTable("post", (t) => ({
   id: t.uuid().notNull().primaryKey().defaultRandom(),
@@ -13,23 +11,14 @@ export const Post = pgTable("post", (t) => ({
     .$onUpdateFn(() => sql`now()`),
 }));
 
-export const CreatePostSchema = createInsertSchema(Post, {
-  title: z.string().max(256),
-  content: z.string().max(256),
-}).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
 export const Setup = pgTable("setup", (t) => ({
   id: t.uuid().notNull().primaryKey().defaultRandom(),
   title: t.varchar({ length: 256 }).notNull(),
   author: t.varchar({ length: 256 }).notNull(),
   imageUrl: t.text().notNull(),
-  description: t.text().notNull(),
-  likes: t.integer().notNull().default(0),
-  tags: t.text().array().notNull(),
+  description: t.text(),
+  likes: t.integer().notNull(),
+  tags: t.text().array().default([]),
 }));
 
 export interface EntityMap {
